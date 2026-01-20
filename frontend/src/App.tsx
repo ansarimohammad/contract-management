@@ -1,31 +1,18 @@
-import { useState } from 'react'
-import axios from 'axios'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Layout } from './components/Layout';
+import { Dashboard } from "./pages/Dashboard";
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  const handleBackend = () => {
-    axios.get('http://localhost:3000/api')
-      .then(response => {
-        console.log(response.data)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }
-
   return (
-    <>
-      <div>
-        Home page
-        <br />
-        <button onClick={handleBackend}>
-          Click to Check Backend
-        </button>
-      </div>
-    </>
-  )
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
