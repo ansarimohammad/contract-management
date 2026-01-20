@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import Draggable from 'react-draggable';
 import type { FieldDefinition, FieldType } from '../types';
+import { FieldEditor } from '../components/FieldEditor';
 import { storageService } from '../services/storageService';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -63,7 +64,7 @@ export const BlueprintBuilder: React.FC = () => {
       label: `New ${type} field`,
       required: false,
       x: x ?? 20,
-      y: y ?? fields.length * 60 + 20, // Simple auto-layout or custom position
+      y: y ?? fields.length * 60 + 20, 
     };
     setFields([...fields, newField]);
     setSelectedFieldId(newField.id);
@@ -92,15 +93,6 @@ export const BlueprintBuilder: React.FC = () => {
       const canvasRect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - canvasRect.left;
       const y = e.clientY - canvasRect.top;
-      // Adjust for scroll if needed, but since we are dropping on the div which might scroll, 
-      // getting coordinates relative to the viewport (clientX) minus the element's position (rect) is usually correct for "offset within element".
-      // However, if the user scrolled down in the canvas, we might need to account for scrollTop.
-      // Let's check if e.currentTarget is the scrolling container. 
-      // In the JSX, the Card has overflow:auto, but we are attaching handlers to the inner div (height: 1000px).
-      // So e.currentTarget is the inner div.
-      // The inner div doesn't scroll itself, its parent does. 
-      // So (clientX - rect.left) gives position relative to the top-left of the inner div (which is what we want for absolute positioning).
-      
       addField(type, x, y);
     }
   };
@@ -192,8 +184,20 @@ export const BlueprintBuilder: React.FC = () => {
           </div>
         </Card>
 
-        
-       
+        {/* Right Sidebar: Properties */}
+        <div style={{ width: '300px' }}>
+          {selectedField ? (
+            <FieldEditor
+              field={selectedField}
+              onChange={(updates) => updateField(selectedField.id, updates)}
+              onDelete={() => deleteField(selectedField.id)}
+            />
+          ) : (
+            <Card style={{ color: '#888', textAlign: 'center' }}>
+              Select a field to edit properties
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );
