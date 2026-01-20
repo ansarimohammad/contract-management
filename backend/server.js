@@ -7,14 +7,14 @@ const app = express()
 const PORT = 3000
 
 app.use(cors({
-  origin: "http://localhost:5174",
+  origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.get('/api', (req, res) => {
+  res.send('Hello World! This is /api route Thank You for Testing')
 })
 
 

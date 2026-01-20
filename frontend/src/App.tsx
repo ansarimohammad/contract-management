@@ -6,7 +6,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   const handleBackend = () => {
-    axios.get('/')
+    axios.get('http://localhost:3000/api')
       .then(response => {
         console.log(response.data)
       })
