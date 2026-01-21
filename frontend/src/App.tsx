@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Layout } from './components/Layout';
-import { Dashboard } from "./pages/Dashboard";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Dashboard } from './pages/Dashboard';
+import { BlueprintBuilder } from './pages/BlueprintBuilder';
 import { CreateContract } from './pages/CreateContract';
-import { BlueprintBuilder } from "./pages/BlueprintBuilder";
-
+import { ContractDetails } from './pages/ContractDetails';
+import { Layout } from './components/Layout';
+import './index.css';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/blueprints/new" element={<BlueprintBuilder />} />
           <Route path="/contracts/new" element={<CreateContract />} />
+          <Route path="/contracts/:id" element={<ContractDetails />} />
         </Routes>
       </Layout>
     </BrowserRouter>
