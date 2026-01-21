@@ -142,8 +142,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 👤 Author
 
 **Mohammad Ahmad Ansari**
-- GitHub: [@yourusername](https://github.com/ansarimohammad)
-- LinkedIn: [Your Profile](https://linkedin.com/in/ansarimd)
+- GitHub: [@Ansarimohammad](https://github.com/ansarimohammad)
+- LinkedIn: [Ansari md](https://linkedin.com/in/ansarimd)
 
 ## 🙏 Acknowledgments
 
