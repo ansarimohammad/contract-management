@@ -4,6 +4,8 @@ import type { Contract, Blueprint, ContractStatus } from '../types';
 import { storageService } from '../services/storageService';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { Badge } from '../components/ui/Badge';
+import { StatusStepper } from '../components/ui/StatusStepper';
 
 const STATUS_ORDER: ContractStatus[] = ['Created', 'Approved', 'Sent', 'Signed', 'Locked'];
 
@@ -72,6 +74,7 @@ export const ContractDetails: React.FC = () => {
           <Button onClick={() => navigate('/')}>← Back</Button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>{contract.name}</h1>
+            <Badge status={contract.status} />
           </div>
         </div>
         
@@ -98,6 +101,8 @@ export const ContractDetails: React.FC = () => {
         </div>
       </header>
 
+      {/* Progress Stepper */}
+      <StatusStepper currentStatus={contract.status} />
 
       <Card title="Contract Details">
         <p className="text-muted">Template: {contract.blueprintName}</p>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavBar } from './ui/Navbar';
+import { Navbar } from './ui/Navbar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,15 +7,9 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <NavBar />
-      <main style={{ 
-        flex: 1, 
-        width: '100%', 
-        maxWidth: '1200px', 
-        margin: '0 auto', 
-        padding: '32px 24px' 
-      }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#f3f4f6' }}>
+      <Navbar />
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {children}
       </main>
     </div>
