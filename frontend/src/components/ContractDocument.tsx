@@ -10,7 +10,7 @@ interface ContractDocumentProps {
 
 export const ContractDocument: React.FC<ContractDocumentProps> = ({ template, values, blueprint }) => {
   // Regex to replace {{Field Label}} or {{fieldId}}
-  const renderedContent = template.replace(/\{\{(.*?)\}\}/g, (match, key) => {
+  const renderedContent = template.replace(/\{\{(.*?)\}\}/g, (_, key) => {
     const trimmedKey = key.trim();
     
     // 1. Try to find field by ID directly
