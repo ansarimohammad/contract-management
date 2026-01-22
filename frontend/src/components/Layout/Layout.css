@@ -1,0 +1,16 @@
+/* Global Layout Styles */
+.main-content {
+  transition: padding 0.2s;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 24px 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 16px 12px !important;
+  }
+}

@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Dashboard } from './pages/Dashboard';
-import { BlueprintBuilder } from './pages/BlueprintBuilder';
-import { CreateContract } from './pages/CreateContract';
-import { ContractDetails } from './pages/ContractDetails';
-import { Layout } from './components/Layout';
+import { Dashboard } from './pages/Dashboard/Dashboard';
+import { BlueprintBuilder } from './pages/BlueprintBuilder/BlueprintBuilder';
+import { CreateContract } from './pages/CreateContract/CreateContract';
+import { ContractDetails } from './pages/ContractDetails/ContractDetails';
+import { Layout } from './components/Layout/Layout';
 import './index.css';
 
 function App() {

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import type { Blueprint } from '../types';
-import { storageService } from '../services/storageService';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Card } from '../components/ui/Card';
+import type { Blueprint, Contract } from '../../types';
+import { storageService } from '../../services/storageService';
+import { Button } from '../../components/ui/Button/Button';
+import { Input } from '../../components/ui/Input/Input';
+import { Card } from '../../components/ui/Card/Card';
+import './CreateContract.css';
 
 export const CreateContract: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -13,7 +14,7 @@ export const CreateContract: React.FC = () => {
 
   const [blueprints, setBlueprints] = useState<Blueprint[]>([]);
   const [selectedBlueprint, setSelectedBlueprint] = useState<Blueprint | null>(null);
-
+  
   const [contractName, setContractName] = useState('');
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ export const CreateContract: React.FC = () => {
       try {
         const data = await storageService.getBlueprints();
         setBlueprints(data);
-
+        
         if (blueprintId) {
           const found = data.find(b => b.id === blueprintId);
           if (found) setSelectedBlueprint(found);
@@ -82,20 +83,19 @@ export const CreateContract: React.FC = () => {
 
   return (
     <div className="container" style={{ padding: 0 }}>
-      <header style={{ display: 'flex', alignItems: 'center', marginBottom: '24px' }}>
+      <header className="create-header">
         <Button onClick={() => navigate('/')} style={{ marginRight: '16px' }}>← Back</Button>
-        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>Create New Contract</h1>
+        <h1 className="create-title">Create New Contract</h1>
       </header>
 
-      <Card style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <Card className="create-form-container">
         {!selectedBlueprint ? (
           <div>
             <label className="label">Select a Blueprint Template</label>
-            <select
-              className="input"
-              onChange={handleBlueprintSelect}
+            <select 
+              className="template-selector" 
+              onChange={handleBlueprintSelect} 
               defaultValue=""
-              style={{ width: '100%', padding: '8px 12px', borderRadius: '4px', border: '1px solid #e5e7eb' }}
             >
               <option value="" disabled>-- Choose a template --</option>
               {blueprints.map(b => (
@@ -105,9 +105,9 @@ export const CreateContract: React.FC = () => {
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #eee' }}>
-              <h3>Template: {selectedBlueprint.name}</h3>
-              <Button
+            <div className="template-header">
+              <h3 className="template-name">Template: {selectedBlueprint.name}</h3>
+              <Button 
                 variant="secondary"
                 onClick={() => setSelectedBlueprint(null)}
                 style={{ fontSize: '12px', padding: '4px 8px' }}
@@ -124,57 +124,57 @@ export const CreateContract: React.FC = () => {
               placeholder="e.g., NDA for John Doe"
             />
 
-            <div style={{ display: 'grid', gap: '20px', marginTop: '20px' }}>
+            <div className="form-grid">
               {selectedBlueprint.fields
                 .sort((a, b) => a.y - b.y) // Sort by Y position roughly
                 .map(field => (
-                  <div key={field.id}>
-                    {field.type === 'text' && (
-                      <Input
-                        label={field.label}
-                        required={field.required}
-                        value={formData[field.id] || ''}
-                        onChange={e => handleInputChange(field.id, e.target.value)}
-                      />
-                    )}
+                <div key={field.id}>
+                  {field.type === 'text' && (
+                    <Input
+                      label={field.label}
+                      required={field.required}
+                      value={formData[field.id] || ''}
+                      onChange={e => handleInputChange(field.id, e.target.value)}
+                    />
+                  )}
 
-                    {field.type === 'date' && (
-                      <Input
-                        type="date"
-                        label={field.label}
-                        required={field.required}
-                        value={formData[field.id] || ''}
-                        onChange={e => handleInputChange(field.id, e.target.value)}
-                      />
-                    )}
+                  {field.type === 'date' && (
+                    <Input
+                      type="date"
+                      label={field.label}
+                      required={field.required}
+                      value={formData[field.id] || ''}
+                      onChange={e => handleInputChange(field.id, e.target.value)}
+                    />
+                  )}
 
-                    {field.type === 'checkbox' && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
-                        <input
-                          type="checkbox"
-                          checked={!!formData[field.id]}
-                          onChange={e => handleInputChange(field.id, e.target.checked)}
-                          id={field.id}
-                        />
-                        <label htmlFor={field.id} style={{ fontSize: '14px', fontWeight: 500 }}>{field.label}</label>
-                      </div>
-                    )}
-
-                    {field.type === 'signature' && (
-                      <Input
-                        label={field.label}
-                        required={field.required}
-                        placeholder="Type name to sign (simulated)"
-                        value={formData[field.id] || ''}
-                        onChange={e => handleInputChange(field.id, e.target.value)}
-                        style={{ fontFamily: 'cursive' }}
+                  {field.type === 'checkbox' && (
+                    <div className="checkbox-group">
+                      <input
+                        type="checkbox"
+                        checked={!!formData[field.id]}
+                        onChange={e => handleInputChange(field.id, e.target.checked)}
+                        id={field.id}
                       />
-                    )}
-                  </div>
-                ))}
+                      <label htmlFor={field.id} className="checkbox-label">{field.label}</label>
+                    </div>
+                  )}
+
+                  {field.type === 'signature' && (
+                    <Input
+                      label={field.label}
+                      required={field.required}
+                      placeholder="Type name to sign (simulated)"
+                      value={formData[field.id] || ''}
+                      onChange={e => handleInputChange(field.id, e.target.value)}
+                      className="signature-input"
+                    />
+                  )}
+                </div>
+              ))}
             </div>
 
-            <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'flex-end' }}>
+            <div className="form-actions">
               <Button type="submit" variant="primary" isLoading={submitting}>
                 Create Contract
               </Button>

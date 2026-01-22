@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import type { Contract, Blueprint, ContractStatus } from '../types';
-import { storageService } from '../services/storageService';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { StatusStepper } from '../components/ui/StatusStepper';
-import { ContractDocument } from '../components/ContractDocument';
+import type { Contract, Blueprint, ContractStatus } from '../../types';
+import { storageService } from '../../services/storageService';
+import { Button } from '../../components/ui/Button/Button';
+import { Card } from '../../components/ui/Card/Card';
+import { Badge } from '../../components/ui/Badge/Badge';
+import { StatusStepper } from '../../components/ui/StatusStepper/StatusStepper';
+import { ContractDocument } from '../../components/ContractDocument/ContractDocument';
+import './ContractDetails.css';
 
 const STATUS_ORDER: ContractStatus[] = ['Created', 'Approved', 'Sent', 'Signed', 'Locked'];
 
@@ -71,16 +72,16 @@ export const ContractDetails: React.FC = () => {
 
   return (
     <div className="container" style={{ padding: 0 }}>
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <header className="details-header">
+        <div className="details-header-left">
           <Button onClick={() => navigate('/')}>← Back</Button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>{contract.name}</h1>
+          <div className="details-title-wrapper">
+            <h1 className="details-title">{contract.name}</h1>
             <Badge status={contract.status} />
           </div>
         </div>
         
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="details-actions">
           {nextStatus && (
             <Button 
               variant="primary" 
@@ -107,32 +108,16 @@ export const ContractDetails: React.FC = () => {
       <StatusStepper currentStatus={contract.status} />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', borderBottom: '1px solid #e5e7eb' }}>
+      <div className="tabs-container">
         <button
           onClick={() => setActiveTab('document')}
-          style={{
-            padding: '10px 0',
-            border: 'none',
-            background: 'none',
-            borderBottom: activeTab === 'document' ? '2px solid var(--primary)' : '2px solid transparent',
-            color: activeTab === 'document' ? 'var(--primary)' : '#6b7280',
-            fontWeight: 500,
-            cursor: 'pointer'
-          }}
+          className={`tab-button ${activeTab === 'document' ? 'active' : ''}`}
         >
           Document View
         </button>
         <button
           onClick={() => setActiveTab('details')}
-          style={{
-            padding: '10px 0',
-            border: 'none',
-            background: 'none',
-            borderBottom: activeTab === 'details' ? '2px solid var(--primary)' : '2px solid transparent',
-            color: activeTab === 'details' ? 'var(--primary)' : '#6b7280',
-            fontWeight: 500,
-            cursor: 'pointer'
-          }}
+          className={`tab-button ${activeTab === 'details' ? 'active' : ''}`}
         >
           Field Data
         </button>
@@ -148,7 +133,7 @@ export const ContractDetails: React.FC = () => {
             />
           ) : (
             <Card>
-              <p className="text-muted" style={{ textAlign: 'center', padding: '40px' }}>
+              <p className="text-muted no-template-msg">
                 No document template available for this blueprint.
               </p>
             </Card>
@@ -159,13 +144,13 @@ export const ContractDetails: React.FC = () => {
           <p className="text-muted">Template: {contract.blueprintName}</p>
           <p className="text-muted">Created: {new Date(contract.createdAt).toLocaleString()}</p>
 
-          <div style={{ marginTop: '20px', display: 'grid', gap: '20px', gridTemplateColumns: '1fr 1fr' }}>
+          <div className="fields-grid">
             {blueprint.fields.map(field => (
-              <div key={field.id} style={{ padding: '10px', background: '#f9fafb', borderRadius: '4px' }}>
-                <strong style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+              <div key={field.id} className="field-item">
+                <strong className="field-label-display">
                   {field.label}
                 </strong>
-                <div style={{ fontSize: '16px' }}>
+                <div className="field-value">
                   {field.type === 'checkbox' ? (
                     contract.values[field.id] ? 'Yes' : 'No'
                   ) : (

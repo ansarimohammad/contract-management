@@ -1,0 +1,86 @@
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.dashboard-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #374151;
+}
+
+/* Responsive Table */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Force scroll on small screens */
+}
+
+.data-table th {
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  padding: 12px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.data-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f9f9f9;
+  color: #111827;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+/* Blueprints Grid */
+.blueprints-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 640px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .dashboard-actions {
+    width: 100%;
+  }
+  
+  .dashboard-actions button {
+    flex: 1;
+  }
+}

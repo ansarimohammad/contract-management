@@ -1,8 +1,8 @@
 import React from 'react';
 import type { FieldDefinition } from '../types';
-import { Button } from './ui/Button';
-import { Input } from './ui/Input';
-import { Card } from './ui/Card';
+import { Button } from './ui/Button/Button';
+import { Input } from './ui/Input/Input';
+import { Card } from './ui/Card/Card';
 
 interface FieldEditorProps {
   field: FieldDefinition;

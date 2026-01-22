@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Blueprint, Contract, ContractStatus } from '../types';
-import { storageService } from '../services/storageService';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
+import type { Blueprint, Contract, ContractStatus } from '../../types';
+import { storageService } from '../../services/storageService';
+import { Button } from '../../components/ui/Button/Button';
+import { Card } from '../../components/ui/Card/Card';
+import { Badge } from '../../components/ui/Badge/Badge';
+import './Dashboard.css';
 
 const STATUS_ORDER: ContractStatus[] = ['Created', 'Approved', 'Sent', 'Signed', 'Locked'];
 
@@ -68,10 +69,10 @@ export const Dashboard: React.FC = () => {
   if (loading) return <div className="container">Loading...</div>;
 
   return (
-    <div className="container" style={{ padding: 0 }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 600, color: '#111827' }}>Contract Dashboard</h1>
-        <div style={{ display: 'flex', gap: '10px' }}>
+    <div className="container">
+      <header className="dashboard-header">
+        <h1 className="dashboard-title">Contract Dashboard</h1>
+        <div className="dashboard-actions">
           <Button variant="ghost" onClick={handleSeedData} isLoading={seeding}>
             🌱 Seed Data
           </Button>
@@ -84,32 +85,32 @@ export const Dashboard: React.FC = () => {
         </div>
       </header>
 
-      <section style={{ marginBottom: '40px' }}>
-        <h2>Active Contracts</h2>
+      <section className="dashboard-section">
+        <h2 className="section-title">Active Contracts</h2>
         {contracts.length === 0 ? (
           <p className="text-muted">No contracts found.</p>
         ) : (
-          <Card>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <Card className="table-container">
+            <table className="data-table">
               <thead>
-                <tr style={{ textAlign: 'left', borderBottom: '1px solid #eee' }}>
-                  <th style={{ padding: '10px' }}>Name</th>
-                  <th style={{ padding: '10px' }}>Blueprint</th>
-                  <th style={{ padding: '10px' }}>Status</th>
-                  <th style={{ padding: '10px' }}>Date</th>
-                  <th style={{ padding: '10px' }}>Actions</th>
+                <tr>
+                  <th>Name</th>
+                  <th>Blueprint</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {contracts.map((c) => (
-                  <tr key={c.id} style={{ borderBottom: '1px solid #f9f9f9' }}>
-                    <td style={{ padding: '10px' }}>{c.name}</td>
-                    <td style={{ padding: '10px' }}>{c.blueprintName}</td>
-                    <td style={{ padding: '10px' }}>
+                  <tr key={c.id}>
+                    <td>{c.name}</td>
+                    <td>{c.blueprintName}</td>
+                    <td>
                       <Badge status={c.status} />
                     </td>
-                    <td style={{ padding: '10px' }}>{new Date(c.createdAt).toLocaleDateString()}</td>
-                    <td style={{ padding: '10px', display: 'flex', gap: '8px' }}>
+                    <td>{new Date(c.createdAt).toLocaleDateString()}</td>
+                    <td className="actions-cell">
                       <Button onClick={() => navigate(`/contracts/${c.id}`)}>View</Button>
                       
                       {c.status !== 'Locked' && c.status !== 'Revoked' && (
@@ -130,12 +131,12 @@ export const Dashboard: React.FC = () => {
         )}
       </section>
 
-      <section>
-        <h2>Available Blueprints</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+      <section className="dashboard-section">
+        <h2 className="section-title">Available Blueprints</h2>
+        <div className="blueprints-grid">
           {blueprints.map((b) => (
             <Card key={b.id} title={b.name}>
-              <p style={{ color: '#666', marginTop: 0 }}>{b.fields.length} fields</p>
+              <p className="text-muted" style={{ marginTop: 0 }}>{b.fields.length} fields</p>
               <Button style={{ marginTop: '10px', width: '100%' }} onClick={() => navigate('/contracts/new?blueprintId=' + b.id)}>
                 Use Template
               </Button>

@@ -1,0 +1,104 @@
+.navbar {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.brand-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: #2563eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.brand-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.nav-link.active {
+  color: #2563eb;
+  background-color: #eff6ff;
+  font-weight: 600;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 16px;
+  }
+  
+  .navbar-left {
+    gap: 16px;
+  }
+
+  .nav-links {
+    display: none; /* In a real app, implement hamburger menu */
+  }
+  
+  /* Show minimal links or hamburger on mobile */
+  .brand-text {
+    display: none; /* Save space on very small screens */
+  }
+}
+
+@media (min-width: 769px) {
+  .brand-text {
+    display: block;
+  }
+}

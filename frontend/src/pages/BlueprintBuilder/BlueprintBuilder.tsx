@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import Draggable from 'react-draggable';
-import type { FieldDefinition, FieldType } from '../types';
-import { FieldEditor } from '../components/FieldEditor';
-import { storageService } from '../services/storageService';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Card } from '../components/ui/Card';
+import type { FieldDefinition, FieldType } from '../../types';
+import { FieldEditor } from '../../components/FieldEditor';
+import { storageService } from '../../services/storageService';
+import { Button } from '../../components/ui/Button/Button';
+import { Input } from '../../components/ui/Input/Input';
+import { Card } from '../../components/ui/Card/Card';
+import './BlueprintBuilder.css';
 
 interface DraggableFieldProps {
   field: FieldDefinition;
@@ -29,22 +30,10 @@ const DraggableField: React.FC<DraggableFieldProps> = ({ field, isSelected, onSe
       <div
         ref={nodeRef}
         onClick={onSelect}
-        style={{
-          position: 'absolute',
-          border: isSelected ? '2px solid var(--primary)' : '1px solid #ccc',
-          background: 'white',
-          padding: '8px',
-          borderRadius: '4px',
-          cursor: 'grab',
-          minWidth: '150px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-          zIndex: isSelected ? 10 : 1
-        }}
+        className={`draggable-field ${isSelected ? 'selected' : ''}`}
       >
-        <div style={{ fontSize: '12px', color: '#666' }}>{field.label} {field.required && '*'}</div>
-        <div style={{ 
-          height: '30px', background: '#eee', marginTop: '4px', borderRadius: '4px' 
-        }} />
+        <div className="field-label">{field.label} {field.required && '*'}</div>
+        <div className="field-placeholder" />
       </div>
     </Draggable>
   );
@@ -128,15 +117,13 @@ export const BlueprintBuilder: React.FC = () => {
   const selectedField = fields.find((f) => f.id === selectedFieldId);
 
   return (
-    <div className="container" style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px - 64px)', padding: 0 }}>
-      <header style={{ 
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+    <div className="container builder-container">
+      <header className="builder-header">
+        <div className="builder-header-left">
           <Button onClick={() => navigate('/')}>← Back</Button>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>Create Blueprint</h1>
+          <h1 className="builder-title">Create Blueprint</h1>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div className="builder-header-right">
           <Input
             placeholder="Blueprint Name"
             value={name}
@@ -149,10 +136,10 @@ export const BlueprintBuilder: React.FC = () => {
         </div>
       </header>
 
-      <div style={{ display: 'flex', flex: 1, gap: '24px', overflow: 'hidden' }}>
+      <div className="builder-workspace">
         {/* Left Sidebar: Tools */}
-        <Card style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '10px' }} title="Tools">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '16px' }}>
+        <Card className="tools-sidebar" title="Tools">
+          <div className="tools-mode-switch">
              <Button 
                variant={viewMode === 'fields' ? 'primary' : 'secondary'} 
                onClick={() => setViewMode('fields')}
@@ -168,8 +155,8 @@ export const BlueprintBuilder: React.FC = () => {
           </div>
 
           {viewMode === 'fields' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <strong style={{ fontSize: '12px', color: '#666' }}>DRAG TO CANVAS</strong>
+            <div className="tools-list">
+              <strong className="tools-section-title">DRAG TO CANVAS</strong>
               <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'text')}>
                 <Button style={{ width: '100%' }} onClick={() => addField('text')}>+ Text</Button>
               </div>
@@ -188,11 +175,11 @@ export const BlueprintBuilder: React.FC = () => {
           {viewMode === 'template' && (
             <div style={{ fontSize: '12px', color: '#666' }}>
               <strong>Available Variables:</strong>
-              <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div className="variable-list">
                 {fields.map(f => (
                   <div 
                     key={f.id} 
-                    style={{ padding: '4px', background: '#f3f4f6', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
+                    className="variable-item"
                     onClick={() => setContentTemplate(prev => prev + `{{${f.label}}}`)}
                     title="Click to insert"
                   >
@@ -206,14 +193,12 @@ export const BlueprintBuilder: React.FC = () => {
         </Card>
 
         {/* Center: Canvas or Template Editor */}
-        <Card style={{ flex: 1, position: 'relative', background: viewMode === 'fields' ? '#f9fafb' : 'white', overflow: 'auto', padding: viewMode === 'template' ? '20px' : 0 }}>
+        <Card className={`canvas-area ${viewMode === 'fields' ? 'canvas-bg' : 'template-bg'}`} style={{ padding: viewMode === 'template' ? '20px' : 0 }}>
           {viewMode === 'fields' ? (
-            <div style={{ 
-              width: '100%', height: '1000px', // Large canvas
-              position: 'relative' 
-            }}
-            onDragOver={handleCanvasDragOver}
-            onDrop={handleCanvasDrop}
+            <div 
+              className="canvas-content"
+              onDragOver={handleCanvasDragOver}
+              onDrop={handleCanvasDrop}
             >
               {fields.map((field) => (
                 <DraggableField
@@ -226,24 +211,14 @@ export const BlueprintBuilder: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div className="template-editor">
               <div style={{ marginBottom: '10px', color: '#666' }}>
                 Write your contract text below. Use <code>{`{{Field Label}}`}</code> to insert dynamic values.
               </div>
               <textarea
                 value={contentTemplate}
                 onChange={(e) => setContentTemplate(e.target.value)}
-                style={{
-                  flex: 1,
-                  width: '100%',
-                  padding: '20px',
-                  fontFamily: 'monospace',
-                  fontSize: '14px',
-                  lineHeight: '1.5',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '4px',
-                  resize: 'none'
-                }}
+                className="template-textarea"
                 placeholder="Enter contract agreement text here..."
               />
             </div>
@@ -252,7 +227,7 @@ export const BlueprintBuilder: React.FC = () => {
 
         {/* Right Sidebar: Properties (only visible in fields mode) */}
         {viewMode === 'fields' && (
-          <div style={{ width: '300px' }}>
+          <div className="properties-sidebar">
             {selectedField ? (
               <FieldEditor
                 field={selectedField}

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card } from './ui/Card';
-import type { Blueprint } from '../types';
+import { Card } from '../ui/Card/Card';
+import type { Blueprint } from '../../types';
+import './ContractDocument.css';
 
 interface ContractDocumentProps {
   template: string;
@@ -38,19 +39,8 @@ export const ContractDocument: React.FC<ContractDocumentProps> = ({ template, va
   });
 
   return (
-    <Card style={{ 
-      background: 'white', 
-      padding: '40px', 
-      minHeight: '600px', 
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-      fontFamily: '"Times New Roman", Times, serif',
-      fontSize: '16px',
-      lineHeight: '1.6',
-      color: '#000',
-      maxWidth: '800px',
-      margin: '0 auto'
-    }}>
-      <div style={{ whiteSpace: 'pre-wrap' }}>
+    <Card className="contract-doc">
+      <div className="doc-content">
         {renderedContent}
       </div>
     </Card>
