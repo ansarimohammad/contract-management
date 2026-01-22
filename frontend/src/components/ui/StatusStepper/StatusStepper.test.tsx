@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { StatusStepper } from '../StatusStepper';
+import { StatusStepper } from './StatusStepper';
 
 describe('StatusStepper', () => {
   it('renders all steps in the default order', () => {

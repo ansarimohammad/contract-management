@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import type { Blueprint, Contract } from '../../types';
+import type { Blueprint } from '../../types';
 import { storageService } from '../../services/storageService';
 import { Button } from '../../components/ui/Button/Button';
 import { Input } from '../../components/ui/Input/Input';
