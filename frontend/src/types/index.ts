@@ -13,6 +13,7 @@ export interface Blueprint {
   id: string;
   name: string;
   description?: string;
+  contentTemplate?: string; // Markdown/Text template with {{fieldId}} placeholders
   fields: FieldDefinition[];
   createdAt: string;
 }

@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Blueprint, Contract, ContractStatus } from '../types';
+import { MOCK_BLUEPRINTS, MOCK_CONTRACTS } from './mockData';
 
 const STORAGE_KEYS = {
   BLUEPRINTS: 'contract_platform_blueprints',
@@ -20,6 +21,14 @@ const setStoredData = <T>(key: string, data: T[]) => {
 };
 
 export const storageService = {
+  // Mock Data Seeding
+  async seedMockData(): Promise<void> {
+    await delay(300);
+    // Clear existing data? Or append? Let's clear for a fresh "seed" state
+    setStoredData(STORAGE_KEYS.BLUEPRINTS, MOCK_BLUEPRINTS);
+    setStoredData(STORAGE_KEYS.CONTRACTS, MOCK_CONTRACTS);
+  },
+
   // Blueprints
   async getBlueprints(): Promise<Blueprint[]> {
     await delay(500);

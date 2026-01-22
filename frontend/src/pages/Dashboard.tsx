@@ -13,6 +13,7 @@ export const Dashboard: React.FC = () => {
   const [blueprints, setBlueprints] = useState<Blueprint[]>([]);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
+  const [seeding, setSeeding] = useState(false);
 
   const loadData = async () => {
     try {
@@ -32,6 +33,21 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     loadData();
   }, []);
+
+  const handleSeedData = async () => {
+    if (confirm('This will overwrite existing data with demo data. Continue?')) {
+      setSeeding(true);
+      try {
+        await storageService.seedMockData();
+        await loadData(); // Reload to show new data
+      } catch (error) {
+        console.error(error);
+        alert('Failed to seed data');
+      } finally {
+        setSeeding(false);
+      }
+    }
+  };
 
   const handleQuickStatusChange = async (e: React.MouseEvent, contract: Contract) => {
     e.stopPropagation();
@@ -56,6 +72,9 @@ export const Dashboard: React.FC = () => {
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 600, color: '#111827' }}>Contract Dashboard</h1>
         <div style={{ display: 'flex', gap: '10px' }}>
+          <Button variant="ghost" onClick={handleSeedData} isLoading={seeding}>
+            🌱 Seed Data
+          </Button>
           <Button variant="primary" onClick={() => navigate('/blueprints/new')}>
             + New Blueprint
           </Button>

@@ -54,6 +54,8 @@ export const BlueprintBuilder: React.FC = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [fields, setFields] = useState<FieldDefinition[]>([]);
+  const [contentTemplate, setContentTemplate] = useState('');
+  const [viewMode, setViewMode] = useState<'fields' | 'template'>('fields');
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -64,7 +66,7 @@ export const BlueprintBuilder: React.FC = () => {
       label: `New ${type} field`,
       required: false,
       x: x ?? 20,
-      y: y ?? fields.length * 60 + 20, 
+      y: y ?? fields.length * 60 + 20, // Simple auto-layout or custom position
     };
     setFields([...fields, newField]);
     setSelectedFieldId(newField.id);
@@ -111,6 +113,7 @@ export const BlueprintBuilder: React.FC = () => {
       await storageService.saveBlueprint({
         name,
         fields,
+        contentTemplate,
       });
       alert('Blueprint saved successfully!');
       navigate('/'); // Go back to dashboard
@@ -148,56 +151,121 @@ export const BlueprintBuilder: React.FC = () => {
 
       <div style={{ display: 'flex', flex: 1, gap: '24px', overflow: 'hidden' }}>
         {/* Left Sidebar: Tools */}
-        <Card style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '10px' }} title="Fields">
-          <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'text')}>
-            <Button style={{ width: '100%' }} onClick={() => addField('text')}>+ Text</Button>
+        <Card style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '10px' }} title="Tools">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '16px' }}>
+             <Button 
+               variant={viewMode === 'fields' ? 'primary' : 'secondary'} 
+               onClick={() => setViewMode('fields')}
+             >
+               Fields Design
+             </Button>
+             <Button 
+               variant={viewMode === 'template' ? 'primary' : 'secondary'} 
+               onClick={() => setViewMode('template')}
+             >
+               Document Template
+             </Button>
           </div>
-          <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'date')}>
-            <Button style={{ width: '100%' }} onClick={() => addField('date')}>+ Date</Button>
-          </div>
-          <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'checkbox')}>
-            <Button style={{ width: '100%' }} onClick={() => addField('checkbox')}>+ Checkbox</Button>
-          </div>
-          <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'signature')}>
-            <Button style={{ width: '100%' }} onClick={() => addField('signature')}>+ Signature</Button>
-          </div>
-        </Card>
 
-        {/* Center: Canvas */}
-        <Card style={{ flex: 1, position: 'relative', background: '#f9fafb', overflow: 'auto', padding: 0 }}>
-          <div style={{ 
-            width: '100%', height: '1000px', // Large canvas
-            position: 'relative' 
-          }}
-          onDragOver={handleCanvasDragOver}
-          onDrop={handleCanvasDrop}
-          >
-            {fields.map((field) => (
-              <DraggableField
-                key={field.id}
-                field={field}
-                isSelected={selectedFieldId === field.id}
-                onSelect={() => setSelectedFieldId(field.id)}
-                onDragStop={(x, y) => handleDragStop(field.id, x, y)}
-              />
-            ))}
-          </div>
-        </Card>
-
-        {/* Right Sidebar: Properties */}
-        <div style={{ width: '300px' }}>
-          {selectedField ? (
-            <FieldEditor
-              field={selectedField}
-              onChange={(updates) => updateField(selectedField.id, updates)}
-              onDelete={() => deleteField(selectedField.id)}
-            />
-          ) : (
-            <Card style={{ color: '#888', textAlign: 'center' }}>
-              Select a field to edit properties
-            </Card>
+          {viewMode === 'fields' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <strong style={{ fontSize: '12px', color: '#666' }}>DRAG TO CANVAS</strong>
+              <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'text')}>
+                <Button style={{ width: '100%' }} onClick={() => addField('text')}>+ Text</Button>
+              </div>
+              <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'date')}>
+                <Button style={{ width: '100%' }} onClick={() => addField('date')}>+ Date</Button>
+              </div>
+              <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'checkbox')}>
+                <Button style={{ width: '100%' }} onClick={() => addField('checkbox')}>+ Checkbox</Button>
+              </div>
+              <div draggable onDragStart={(e) => handleSidebarDragStart(e, 'signature')}>
+                <Button style={{ width: '100%' }} onClick={() => addField('signature')}>+ Signature</Button>
+              </div>
+            </div>
           )}
-        </div>
+          
+          {viewMode === 'template' && (
+            <div style={{ fontSize: '12px', color: '#666' }}>
+              <strong>Available Variables:</strong>
+              <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {fields.map(f => (
+                  <div 
+                    key={f.id} 
+                    style={{ padding: '4px', background: '#f3f4f6', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
+                    onClick={() => setContentTemplate(prev => prev + `{{${f.label}}}`)}
+                    title="Click to insert"
+                  >
+                    {`{{${f.label}}}`}
+                  </div>
+                ))}
+                {fields.length === 0 && <span>No fields added yet.</span>}
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* Center: Canvas or Template Editor */}
+        <Card style={{ flex: 1, position: 'relative', background: viewMode === 'fields' ? '#f9fafb' : 'white', overflow: 'auto', padding: viewMode === 'template' ? '20px' : 0 }}>
+          {viewMode === 'fields' ? (
+            <div style={{ 
+              width: '100%', height: '1000px', // Large canvas
+              position: 'relative' 
+            }}
+            onDragOver={handleCanvasDragOver}
+            onDrop={handleCanvasDrop}
+            >
+              {fields.map((field) => (
+                <DraggableField
+                  key={field.id}
+                  field={field}
+                  isSelected={selectedFieldId === field.id}
+                  onSelect={() => setSelectedFieldId(field.id)}
+                  onDragStop={(x, y) => handleDragStop(field.id, x, y)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ marginBottom: '10px', color: '#666' }}>
+                Write your contract text below. Use <code>{`{{Field Label}}`}</code> to insert dynamic values.
+              </div>
+              <textarea
+                value={contentTemplate}
+                onChange={(e) => setContentTemplate(e.target.value)}
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  padding: '20px',
+                  fontFamily: 'monospace',
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '4px',
+                  resize: 'none'
+                }}
+                placeholder="Enter contract agreement text here..."
+              />
+            </div>
+          )}
+        </Card>
+
+        {/* Right Sidebar: Properties (only visible in fields mode) */}
+        {viewMode === 'fields' && (
+          <div style={{ width: '300px' }}>
+            {selectedField ? (
+              <FieldEditor
+                field={selectedField}
+                onChange={(updates) => updateField(selectedField.id, updates)}
+                onDelete={() => deleteField(selectedField.id)}
+              />
+            ) : (
+              <Card style={{ color: '#888', textAlign: 'center' }}>
+                Select a field to edit properties
+              </Card>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
